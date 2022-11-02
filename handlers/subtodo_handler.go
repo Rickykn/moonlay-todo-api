@@ -13,7 +13,7 @@ func (h *Handler) AddSubtodo(c echo.Context) error {
 	var fileName string
 	title := c.FormValue("title")
 	description := c.FormValue("description")
-	id := c.Param("id")
+	id := c.FormValue("todo_id")
 	convId, _ := strconv.Atoi(id)
 	file, err := c.FormFile("file")
 
@@ -38,7 +38,7 @@ func (h *Handler) AddSubtodo(c echo.Context) error {
 }
 
 func (h *Handler) GetAllSubTodoByTodoId(c echo.Context) error {
-	id := c.Param("id")
+	id := c.FormValue("todo_id")
 	convId, _ := strconv.Atoi(id)
 
 	response, _ := h.subtodoService.GetAllTodoByTodoId(convId)

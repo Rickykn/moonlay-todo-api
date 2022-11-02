@@ -62,6 +62,7 @@ func (h *Handler) GetAllTodo(c echo.Context) error {
 	} else {
 		for _, val := range todos {
 			todo := &dtos.ResponeTodoDTO{
+				ID:          val.ID,
 				Title:       val.Title,
 				Description: val.Description,
 				File:        val.File,
@@ -99,4 +100,35 @@ func (h *Handler) DeleteTodoById(c echo.Context) error {
 	} else {
 		return c.JSON(response.Code, response)
 	}
+}
+
+func (h *Handler) UpdateTodoById(c echo.Context) error {
+	var isSuccess = true
+	var fileName string
+	id := c.Param("id")
+	convId, _ := strconv.Atoi(id)
+	title := c.FormValue("title")
+	description := c.FormValue("description")
+	file, err := c.FormFile("file")
+
+	if file != nil {
+		fileName, isSuccess = helpers.Uploader(file, err)
+	}
+
+	if isSuccess {
+		response, _ := h.todoService.UpdateTodoByid(convId, title, description, fileName)
+		if response.Error {
+			return c.JSON(response.Code, response)
+		} else {
+			return c.JSON(response.Code, response)
+		}
+	}
+
+	return c.JSON(http.StatusBadRequest, helpers.JsonResponse{
+		Code:    500,
+		Message: "just can upload pdf and txt file",
+		Data:    nil,
+		Error:   false,
+	})
+
 }

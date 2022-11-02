@@ -58,9 +58,10 @@ func main() {
 	e.GET("/todo", h.GetAllTodo)
 	e.GET("/todo/subtodo", h.GetAllTodoWithSubtodo)
 	e.DELETE("/todo/:id", h.DeleteTodoById)
+	e.PATCH("/todo/:id", h.UpdateTodoById)
 
-	e.POST("/subtodo/:id", h.AddSubtodo)
-	e.GET("/subtodo/:id", h.GetAllSubTodoByTodoId)
+	e.POST("/subtodo", h.AddSubtodo)
+	e.GET("/subtodo", h.GetAllSubTodoByTodoId)
 	e.DELETE("/subtodo/:id", h.DeleteSubtodoById)
 	e.Logger.Fatal(e.Start(":8080"))
 }

@@ -12,6 +12,7 @@ type TodoRepository interface {
 	FindOneTodoByid(id int) (*models.Todo, int, error)
 	FindAllTodoWithSubTodo() ([]*models.Todo, error)
 	Delete(id int) (int, error)
+	Update(newTodo *models.Todo) (*models.Todo, int, error)
 }
 
 type todoRepository struct {
@@ -70,4 +71,10 @@ func (t *todoRepository) Delete(id int) (int, error) {
 
 	result := t.db.Where("id = ?", id).Delete(&todo)
 	return int(result.RowsAffected), result.Error
+}
+
+func (t *todoRepository) Update(newTodo *models.Todo) (*models.Todo, int, error) {
+	result := t.db.Save(newTodo)
+
+	return newTodo, int(result.RowsAffected), result.Error
 }
