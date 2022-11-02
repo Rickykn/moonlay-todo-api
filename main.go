@@ -45,5 +45,6 @@ func main() {
 
 	e.GET("/", HelloWorld)
 	e.POST("/todo", h.AddTodo)
+	e.GET("/todo", h.GetAllTodo)
 	e.Logger.Fatal(e.Start(":8080"))
 }

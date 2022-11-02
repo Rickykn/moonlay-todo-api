@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/Rickykn/moonlay-todo-api/dtos"
 	"github.com/Rickykn/moonlay-todo-api/helpers"
 	"github.com/labstack/echo"
 )
@@ -58,4 +59,42 @@ func (h *Handler) AddTodo(c echo.Context) error {
 		Data:    nil,
 		Error:   false,
 	})
+}
+
+func (h *Handler) GetAllTodo(c echo.Context) error {
+	var todoResponse []*dtos.ResponeTodoDTO
+	page := c.QueryParam("page")
+	limit := c.QueryParam("limit")
+
+	if limit == "" {
+		limit = "10"
+	}
+
+	convPage, _ := strconv.Atoi(page)
+	convSize, _ := strconv.Atoi(limit)
+
+	query := &helpers.Query{
+		Page:  convPage,
+		Limit: convSize,
+	}
+
+	todos, response := h.todoService.GetAllTodo(query)
+
+	if response.Error {
+		return c.JSON(response.Code, response)
+	} else {
+		for _, val := range todos {
+			todo := &dtos.ResponeTodoDTO{
+				Title:       val.Title,
+				Description: val.Description,
+				File:        val.File,
+			}
+
+			todoResponse = append(todoResponse, todo)
+		}
+		response.Data = todoResponse
+
+		return c.JSON(response.Code, response)
+	}
+
 }

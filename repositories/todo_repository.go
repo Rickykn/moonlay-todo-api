@@ -1,12 +1,14 @@
 package repositories
 
 import (
+	"github.com/Rickykn/moonlay-todo-api/helpers"
 	"github.com/Rickykn/moonlay-todo-api/models"
 	"gorm.io/gorm"
 )
 
 type TodoRepository interface {
 	Create(title, description, file string) (*models.Todo, error)
+	FindAllTodo(query *helpers.Query) ([]*models.Todo, error)
 }
 
 type todoRepository struct {
@@ -32,4 +34,15 @@ func (t *todoRepository) Create(title, description, file string) (*models.Todo, 
 	result := t.db.Create(&newTodo)
 
 	return newTodo, result.Error
+}
+
+func (t *todoRepository) FindAllTodo(query *helpers.Query) ([]*models.Todo, error) {
+	var todos []*models.Todo
+
+	result := t.db.
+		Offset((query.Page - 1) * query.Limit).
+		Limit(query.Limit).
+		Find(&todos)
+
+	return todos, result.Error
 }

@@ -2,11 +2,13 @@ package services
 
 import (
 	help "github.com/Rickykn/moonlay-todo-api/helpers"
+	"github.com/Rickykn/moonlay-todo-api/models"
 	r "github.com/Rickykn/moonlay-todo-api/repositories"
 )
 
 type TodoService interface {
 	CreateTodo(title, description, file string) (*help.JsonResponse, error)
+	GetAllTodo(query *help.Query) ([]*models.Todo, *help.JsonResponse)
 }
 
 type todoService struct {
@@ -32,4 +34,14 @@ func (t *todoService) CreateTodo(title, description, file string) (*help.JsonRes
 	}
 
 	return help.HandlerSuccess(201, "Success Add New Todo", todo), nil
+}
+
+func (t *todoService) GetAllTodo(query *help.Query) ([]*models.Todo, *help.JsonResponse) {
+	todos, err := t.todoRepository.FindAllTodo(query)
+
+	if err != nil {
+		return nil, help.HandlerError(500, "Server Error", nil)
+	}
+
+	return todos, help.HandlerSuccess(200, "Get data success", todos)
 }
