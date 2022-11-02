@@ -61,5 +61,6 @@ func main() {
 
 	e.POST("/subtodo/:id", h.AddSubtodo)
 	e.GET("/subtodo/:id", h.GetAllSubTodoByTodoId)
+	e.DELETE("/subtodo/:id", h.DeleteSubtodoById)
 	e.Logger.Fatal(e.Start(":8080"))
 }

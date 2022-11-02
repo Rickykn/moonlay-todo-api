@@ -49,3 +49,16 @@ func (h *Handler) GetAllSubTodoByTodoId(c echo.Context) error {
 		return c.JSON(response.Code, response)
 	}
 }
+
+func (h *Handler) DeleteSubtodoById(c echo.Context) error {
+	id := c.Param("id")
+	convId, _ := strconv.Atoi(id)
+
+	response, _ := h.subtodoService.DeleteSubtodoById(convId)
+
+	if response.Error {
+		return c.JSON(response.Code, response)
+	} else {
+		return c.JSON(response.Code, response)
+	}
+}

@@ -8,6 +8,7 @@ import (
 type SubtodoRepository interface {
 	Create(title, description, file string, id int) (*models.SubTodo, error)
 	FindAllByTodoId(id int) ([]*models.SubTodo, error)
+	Delete(id int) (int, error)
 }
 
 type subtodoRepository struct {
@@ -42,4 +43,11 @@ func (s *subtodoRepository) FindAllByTodoId(id int) ([]*models.SubTodo, error) {
 	result := s.db.Where("todo_id=?", id).Find(&subtodos)
 
 	return subtodos, result.Error
+}
+
+func (t *subtodoRepository) Delete(id int) (int, error) {
+	var subtodo *models.SubTodo
+
+	result := t.db.Where("id = ?", id).Delete(&subtodo)
+	return int(result.RowsAffected), result.Error
 }
