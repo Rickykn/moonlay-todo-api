@@ -35,16 +35,29 @@ func main() {
 		DB: database.Get(),
 	})
 
+	sr := repositories.NewSubtodoRepository(&repositories.SRConfig{
+		DB: database.Get(),
+	})
+
 	ts := services.NewTodoService(&services.TSConfig{
 		TodoRepository: tr,
 	})
 
+	ss := services.NewSubtodoService(&services.SSConfig{
+		SubodoRepository: sr,
+		Ts:               ts,
+	})
+
 	h := handlers.New(&handlers.HandlerConfig{
-		TodoService: ts,
+		TodoService:    ts,
+		SubtodoService: ss,
 	})
 
 	e.GET("/", HelloWorld)
 	e.POST("/todo", h.AddTodo)
 	e.GET("/todo", h.GetAllTodo)
+	e.GET("/todo/subtodo", h.GetAllTodoWithSubtodo)
+
+	e.POST("/subtodo/:id", h.AddSubtodo)
 	e.Logger.Fatal(e.Start(":8080"))
 }

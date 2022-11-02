@@ -14,5 +14,5 @@ type Todo struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   gorm.DeletedAt
-	Sub_todo    []SubTodo
+	Sub_todo    []SubTodo `gorm:"ForeignKey:Todo_id"`
 }

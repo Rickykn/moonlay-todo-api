@@ -9,6 +9,8 @@ import (
 type TodoRepository interface {
 	Create(title, description, file string) (*models.Todo, error)
 	FindAllTodo(query *helpers.Query) ([]*models.Todo, error)
+	FindOneTodoByid(id int) (*models.Todo, int, error)
+	FindAllTodoWithSubTodo() ([]*models.Todo, error)
 }
 
 type todoRepository struct {
@@ -43,6 +45,21 @@ func (t *todoRepository) FindAllTodo(query *helpers.Query) ([]*models.Todo, erro
 		Offset((query.Page - 1) * query.Limit).
 		Limit(query.Limit).
 		Find(&todos)
+
+	return todos, result.Error
+}
+
+func (t *todoRepository) FindOneTodoByid(id int) (*models.Todo, int, error) {
+	var todo *models.Todo
+	result := t.db.Where("id = ?", id).First(&todo)
+
+	return todo, int(result.RowsAffected), result.Error
+}
+
+func (t *todoRepository) FindAllTodoWithSubTodo() ([]*models.Todo, error) {
+	var todos []*models.Todo
+
+	result := t.db.Preload("Sub_todo").Find(&todos)
 
 	return todos, result.Error
 }
