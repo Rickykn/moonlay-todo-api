@@ -87,3 +87,16 @@ func (h *Handler) GetAllTodoWithSubtodo(c echo.Context) error {
 	}
 
 }
+
+func (h *Handler) DeleteTodoById(c echo.Context) error {
+	id := c.Param("id")
+	convId, _ := strconv.Atoi(id)
+
+	response, _ := h.todoService.DeleteTodoById(convId)
+
+	if response.Error {
+		return c.JSON(response.Code, response)
+	} else {
+		return c.JSON(response.Code, response)
+	}
+}

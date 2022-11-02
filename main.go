@@ -57,6 +57,7 @@ func main() {
 	e.POST("/todo", h.AddTodo)
 	e.GET("/todo", h.GetAllTodo)
 	e.GET("/todo/subtodo", h.GetAllTodoWithSubtodo)
+	e.DELETE("/todo/:id", h.DeleteTodoById)
 
 	e.POST("/subtodo/:id", h.AddSubtodo)
 	e.GET("/subtodo/:id", h.GetAllSubTodoByTodoId)

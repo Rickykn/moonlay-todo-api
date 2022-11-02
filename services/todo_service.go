@@ -11,6 +11,7 @@ type TodoService interface {
 	GetAllTodo(query *help.Query) ([]*models.Todo, *help.JsonResponse)
 	GetTodo(id int) (*models.Todo, error)
 	GetAllTodoWithSubtodo() ([]*models.Todo, *help.JsonResponse)
+	DeleteTodoById(id int) (*help.JsonResponse, error)
 }
 
 type todoService struct {
@@ -62,4 +63,18 @@ func (t *todoService) GetAllTodoWithSubtodo() ([]*models.Todo, *help.JsonRespons
 	}
 
 	return todos, help.HandlerSuccess(200, "Get data success", todos)
+}
+func (t *todoService) DeleteTodoById(id int) (*help.JsonResponse, error) {
+	row, err := t.todoRepository.Delete(id)
+
+	if row == 0 {
+		return help.HandlerError(400, "Bad Request", nil), nil
+	}
+
+	if err != nil {
+		return help.HandlerError(500, "Server Error", nil), err
+	}
+
+	return help.HandlerSuccess(200, "Delete Todo Success", nil), nil
+
 }

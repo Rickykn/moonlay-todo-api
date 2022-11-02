@@ -11,6 +11,7 @@ type TodoRepository interface {
 	FindAllTodo(query *helpers.Query) ([]*models.Todo, error)
 	FindOneTodoByid(id int) (*models.Todo, int, error)
 	FindAllTodoWithSubTodo() ([]*models.Todo, error)
+	Delete(id int) (int, error)
 }
 
 type todoRepository struct {
@@ -62,4 +63,11 @@ func (t *todoRepository) FindAllTodoWithSubTodo() ([]*models.Todo, error) {
 	result := t.db.Preload("Sub_todo").Find(&todos)
 
 	return todos, result.Error
+}
+
+func (t *todoRepository) Delete(id int) (int, error) {
+	var todo *models.Todo
+
+	result := t.db.Where("id = ?", id).Delete(&todo)
+	return int(result.RowsAffected), result.Error
 }
