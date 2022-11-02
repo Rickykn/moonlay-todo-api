@@ -59,5 +59,6 @@ func main() {
 	e.GET("/todo/subtodo", h.GetAllTodoWithSubtodo)
 
 	e.POST("/subtodo/:id", h.AddSubtodo)
+	e.GET("/subtodo/:id", h.GetAllSubTodoByTodoId)
 	e.Logger.Fatal(e.Start(":8080"))
 }

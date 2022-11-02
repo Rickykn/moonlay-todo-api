@@ -7,6 +7,7 @@ import (
 
 type SubtodoService interface {
 	CreateSubTodo(title, description, file string, id int) (*help.JsonResponse, error)
+	GetAllTodoByTodoId(id int) (*help.JsonResponse, error)
 }
 
 type subtodoService struct {
@@ -41,5 +42,20 @@ func (s *subtodoService) CreateSubTodo(title, description, file string, id int) 
 	subtodo.Todo = *todo
 
 	return help.HandlerSuccess(201, "Success Add New SubTodo", subtodo), nil
+
+}
+
+func (s *subtodoService) GetAllTodoByTodoId(id int) (*help.JsonResponse, error) {
+	todo, errTodo := s.ts.GetTodo(id)
+
+	if errTodo != nil {
+		return help.HandlerError(404, "Todo Not Found", nil), errTodo
+	}
+
+	subtodo, err := s.subtodoRepository.FindAllByTodoId(todo.ID)
+	if err != nil {
+		return help.HandlerError(500, "Server Error", nil), err
+	}
+	return help.HandlerSuccess(200, "Success Get All SubTodo by todo id", subtodo), nil
 
 }
