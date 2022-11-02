@@ -9,6 +9,7 @@ type SubtodoService interface {
 	CreateSubTodo(title, description, file string, id int) (*help.JsonResponse, error)
 	GetAllTodoByTodoId(id int) (*help.JsonResponse, error)
 	DeleteSubtodoById(id int) (*help.JsonResponse, error)
+	UpdateSubtodoByid(id int, title, description, file string) (*help.JsonResponse, error)
 }
 
 type subtodoService struct {
@@ -60,8 +61,8 @@ func (s *subtodoService) GetAllTodoByTodoId(id int) (*help.JsonResponse, error) 
 	return help.HandlerSuccess(200, "Success Get All SubTodo by todo id", subtodo), nil
 
 }
-func (t *subtodoService) DeleteSubtodoById(id int) (*help.JsonResponse, error) {
-	row, err := t.subtodoRepository.Delete(id)
+func (s *subtodoService) DeleteSubtodoById(id int) (*help.JsonResponse, error) {
+	row, err := s.subtodoRepository.Delete(id)
 
 	if row == 0 {
 		return help.HandlerError(400, "Bad Request", nil), nil
@@ -72,5 +73,35 @@ func (t *subtodoService) DeleteSubtodoById(id int) (*help.JsonResponse, error) {
 	}
 
 	return help.HandlerSuccess(200, "Delete Sub Todo Success", nil), nil
+
+}
+func (s *subtodoService) UpdateSubtodoByid(id int, title, description, file string) (*help.JsonResponse, error) {
+	subtodo, _, err := s.subtodoRepository.FindSubtodoById(id)
+
+	if err != nil {
+		return help.HandlerError(400, "Sub Todo Not Found", nil), err
+	}
+
+	if title != "" {
+		subtodo.Title = title
+	}
+	if description != "" {
+		subtodo.Description = description
+	}
+	if file != "" {
+		subtodo.File = file
+	}
+
+	newSubTodo, row, err := s.subtodoRepository.Update(subtodo)
+
+	if row == 0 {
+		return help.HandlerError(400, "Bad Request", nil), nil
+	}
+
+	if err != nil {
+		return help.HandlerError(500, "Server Error", nil), err
+	}
+
+	return help.HandlerSuccess(200, "Get data success", newSubTodo), nil
 
 }

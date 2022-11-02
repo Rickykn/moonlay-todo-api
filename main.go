@@ -63,5 +63,6 @@ func main() {
 	e.POST("/subtodo", h.AddSubtodo)
 	e.GET("/subtodo", h.GetAllSubTodoByTodoId)
 	e.DELETE("/subtodo/:id", h.DeleteSubtodoById)
+	e.PATCH("/subtodo/:id", h.UpdateSubtodoById)
 	e.Logger.Fatal(e.Start(":8080"))
 }

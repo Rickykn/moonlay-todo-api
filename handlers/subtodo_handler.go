@@ -62,3 +62,34 @@ func (h *Handler) DeleteSubtodoById(c echo.Context) error {
 		return c.JSON(response.Code, response)
 	}
 }
+
+func (h *Handler) UpdateSubtodoById(c echo.Context) error {
+	var isSuccess = true
+	var fileName string
+	id := c.Param("id")
+	convId, _ := strconv.Atoi(id)
+	title := c.FormValue("title")
+	description := c.FormValue("description")
+	file, err := c.FormFile("file")
+
+	if file != nil {
+		fileName, isSuccess = helpers.Uploader(file, err)
+	}
+
+	if isSuccess {
+		response, _ := h.subtodoService.UpdateSubtodoByid(convId, title, description, fileName)
+		if response.Error {
+			return c.JSON(response.Code, response)
+		} else {
+			return c.JSON(response.Code, response)
+		}
+	}
+
+	return c.JSON(http.StatusBadRequest, helpers.JsonResponse{
+		Code:    500,
+		Message: "just can upload pdf and txt file",
+		Data:    nil,
+		Error:   false,
+	})
+
+}

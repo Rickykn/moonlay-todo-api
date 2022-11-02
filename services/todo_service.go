@@ -83,7 +83,7 @@ func (t *todoService) UpdateTodoByid(id int, title, description, file string) (*
 	todo, _, err := t.todoRepository.FindOneTodoByid(id)
 
 	if err != nil {
-		return help.HandlerError(500, "Server Error", nil), err
+		return help.HandlerError(400, "Todo Not Found", nil), err
 	}
 
 	if title != "" {
