@@ -65,6 +65,9 @@ func (s *subtodoService) GetAllTodoByTodoId(id int) (*help.JsonResponse, error) 
 	if err != nil {
 		return help.HandlerError(500, "Server Error", nil), err
 	}
+	for _, val := range subtodo {
+		val.Todo = *todo
+	}
 	return help.HandlerSuccess(200, "Success Get All SubTodo by todo id", subtodo), nil
 
 }
