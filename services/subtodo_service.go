@@ -31,6 +31,13 @@ func NewSubtodoService(c *SSConfig) SubtodoService {
 }
 
 func (s *subtodoService) CreateSubTodo(title, description, file string, id int) (*help.JsonResponse, error) {
+	if title == "" {
+		return help.HandlerError(400, "Title is required", nil), nil
+	}
+
+	if description == "" {
+		return help.HandlerError(400, "description is required", nil), nil
+	}
 	todo, errTodo := s.ts.GetTodo(id)
 
 	if errTodo != nil {

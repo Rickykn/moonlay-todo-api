@@ -31,6 +31,14 @@ func NewTodoService(c *TSConfig) TodoService {
 }
 
 func (t *todoService) CreateTodo(title, description, file string) (*help.JsonResponse, error) {
+	if title == "" {
+		return help.HandlerError(400, "Title is required", nil), nil
+	}
+
+	if description == "" {
+		return help.HandlerError(400, "description is required", nil), nil
+	}
+
 	todo, err := t.todoRepository.Create(title, description, file)
 
 	if err != nil {
