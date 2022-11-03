@@ -4,7 +4,7 @@ Set Up project
 
 1. go mod tidy
 2. Create Database in postgreSQL
-3. setup .env
+3. create and setup .env
    Example:
    HOST=localhost
    PORTDB=5432
